@@ -165,11 +165,16 @@ if show_adsorbates:
     )
 
     # Calculate dipole shift
-    N_site = 1e15  # Surface site density in cm⁻²
+    # Typical oxide surface: ~1e14 cm⁻² = 1e18 m⁻²
+    N_site = 1e14  # Surface site density in cm⁻² (oxide surfaces)
     from physics.xps import calculate_dipole_from_coverage
     Delta_Phi_dip = calculate_dipole_from_coverage(coverage, N_site, mu_debye)
 
-    st.sidebar.info(f"ΔΦ_dip = {Delta_Phi_dip:+.3f} eV")
+    # Validate dipole shift magnitude
+    if abs(Delta_Phi_dip) > 2.0:
+        st.sidebar.warning(f"⚠️ ΔΦ_dip = {Delta_Phi_dip:+.3f} eV (unusually large!)")
+    else:
+        st.sidebar.info(f"ΔΦ_dip = {Delta_Phi_dip:+.3f} eV")
 else:
     Delta_Phi_dip = 0.0
     coverage = 0.0

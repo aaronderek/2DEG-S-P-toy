@@ -110,8 +110,11 @@ def calculate_dipole_shift(N_ads_cm2, mu_debye):
     mu_C_m = mu_debye * DEBYE_TO_CM  # Debye to C·m
 
     # Helmholtz equation: ΔΦdip = -(Nads * μ⊥) / ε₀
-    Delta_Phi_dip_J = -(N_ads * mu_C_m) / EPS0
-    Delta_Phi_dip_eV = J_to_eV(Delta_Phi_dip_J)
+    # Result is in Volts (V), which equals eV for electron work function
+    Delta_Phi_dip_V = -(N_ads * mu_C_m) / EPS0
+
+    # For electric potential: 1 V = 1 eV (no conversion needed)
+    Delta_Phi_dip_eV = Delta_Phi_dip_V
 
     return Delta_Phi_dip_eV
 
