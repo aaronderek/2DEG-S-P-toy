@@ -1,5 +1,40 @@
 # Changelog
 
+## Version 2.1 - 2025-11-11 (Bug Fix)
+
+### 🐛 Critical Bug Fix: Adsorbate Dipole Calculation
+
+**Issue:**
+- When "Show with adsorbates" enabled, ΔΦ_dip displayed ~1e19 eV (should be ~0.3 eV)
+- Figure 2 (ΔWF vs ns) curves became horizontal lines
+- Made adsorbate feature completely unusable
+
+**Root Causes:**
+1. **Unit conversion error**: Helmholtz equation returns Volts, not Joules
+   - Old code: `Delta_Phi_eV = J_to_eV(Delta_Phi_V)` → multiplied by 6.24e18!
+   - Fix: For potential, 1 V = 1 eV (no conversion)
+
+2. **N_site default too large**: 1e15 cm^-2 → should be 1e14 cm^-2
+   - Changed from 1e19 m^-2 to 1e18 m^-2 (factor of 10)
+
+**Verification:**
+- Test: θ=0.5, μ=1.5D, N_site=1e14 cm^-2
+- Before: ΔΦ_dip = -1.76×10^19 eV ✗
+- After: ΔΦ_dip = -0.283 eV ✓
+- Improvement: 6.24×10^19 factor!
+
+**Files Modified:**
+- `physics/xps.py`: Fixed Helmholtz calculation
+- `app.py`: Changed N_site default, added validation warning
+- Added test scripts for verification
+
+**Physics Validation:**
+- ✓ With/without ads curves now parallel (correct!)
+- ✓ ΔΦ_dip in reasonable range (0.1-1 eV)
+- ✓ Slope unchanged by adsorbates
+
+---
+
 ## Version 2.0 - 2025-11-11
 
 ### Major New Features
