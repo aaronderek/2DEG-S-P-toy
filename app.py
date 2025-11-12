@@ -226,6 +226,21 @@ with col1:
 with col2:
     clear_comparison = st.button("Clear Compare", use_container_width=True)
 
+# ============================================================================
+# INITIALIZE MODEL (shared across all tabs)
+# ============================================================================
+
+# Initialize the selected model
+if model_type == "M1-Triangular":
+    model = TriangularModel(m_star, epsilon_r, W_nm)
+elif model_type == "M2-Fang-Howard":
+    model = FangHowardModel(m_star, epsilon_r, W_nm)
+else:  # M3-Parabolic
+    model = ParabolicModel(m_star, epsilon_r, W_nm)
+
+# Initialize XPS model
+xps_model = XPSModel(lambda_xps, theta_xps)
+
 # Main area - Create tabs
 tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
     "📊 Core Figures",
@@ -241,16 +256,6 @@ tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
 # ============================================================================
 
 with tab1:
-    # Initialize the selected model
-    if model_type == "M1-Triangular":
-        model = TriangularModel(m_star, epsilon_r, W_nm)
-    elif model_type == "M2-Fang-Howard":
-        model = FangHowardModel(m_star, epsilon_r, W_nm)
-    else:  # M3-Parabolic
-        model = ParabolicModel(m_star, epsilon_r, W_nm)
-
-    # Initialize XPS model
-    xps_model = XPSModel(lambda_xps, theta_xps)
 
     # Generate curve data for Figure 1: ns vs Phi_s
     Phi_s_range = np.linspace(0.1, 0.6, 100)
